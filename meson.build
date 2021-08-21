@@ -10,7 +10,7 @@ project('csvreader', 'cpp',
 
 
 includes = include_directories('include')
-csvreader_dep = declare_depencency(include_directories: includes)
+csvreader_dep = declare_dependency(include_directories: includes)
 
 executable(
     'foo', ['src/test.cpp'],
