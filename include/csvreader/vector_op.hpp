@@ -3,6 +3,23 @@
 #include <string>
 #include <sstream>
 
+
+template <typename T>
+inline std::ostream& operator << (std::ostream& ostr, const std::vector<T>& v) {
+    if (v.empty()) {
+        ostr << "{ }";
+        return ostr;
+    }
+
+    ostr << "{" << v.front();
+    for (auto itr = ++v.begin(); itr != v.end(); itr++) {
+        ostr << ", " << *itr;
+    }
+    ostr << "}";
+    return ostr;
+}
+
+
 template <typename T>
 inline std::ostream& operator << (std::ostream& ostr, const std::vector<std::vector<T>>& v) {
     if (v.empty()) {
@@ -19,20 +36,7 @@ inline std::ostream& operator << (std::ostream& ostr, const std::vector<std::vec
 }
 
 
-template <typename T>
-inline std::ostream& operator << (std::ostream& ostr, const std::vector<T>& v) {
-    if (v.empty()) {
-        ostr << "{ }";
-        return ostr;
-    }
 
-    ostr << "{" << v.front();
-    for (auto itr = ++v.begin(); itr != v.end(); itr++) {
-        ostr << ", " << *itr;
-    }
-    ostr << "}";
-    return ostr;
-}
 
 template <typename T>
 inline std::vector<T> operator-(std::vector<T> &output, const std::vector<std::string> &input) {
