@@ -2,7 +2,7 @@
 #include <iostream>
 #include <boost/type_index.hpp>
 
-namespace __CR {
+namespace CR {
     /**
      * convert from one type to the other
      * Type2 output = convert<Type1,Type2>(Type1 input);
@@ -28,88 +28,88 @@ namespace __CR {
 
     // string -> string
     template <>
-    std::string convert(std::string input){
+    inline std::string convert(std::string input){
         return input;
     }
     // string -> float
     template <>
-    float convert(std::string input){
+    inline float convert(std::string input){
         return std::stof(input);
     }
     // string -> double
     template <>
-    double convert(std::string input){
+    inline double convert(std::string input){
         return std::stod(input);
     }
     // string -> int
     template <>
-    int convert(std::string input){
+    inline int convert(std::string input){
         return std::stoi(input);
     }
 
 
     // float -> string
     template <>
-    std::string convert(float input){
+    inline std::string convert(float input){
         return std::to_string(input);
     }
     // float -> float
     template <>
-    float convert(float input){
+    inline float convert(float input){
         return float(input);
     }
     // float -> double
     template <>
-    double convert(float input){
+    inline double convert(float input){
         return double(input);
     }
     // float -> int
     template <>
-    int convert(float input){
+    inline int convert(float input){
         return int(input);
     }
 
 
     // double -> string
     template <>
-    std::string convert(double input){
+    inline std::string convert(double input){
         return std::to_string(input);
     }
     // double -> float
     template <>
-    float convert(double input){
+    inline float convert(double input){
         return float(input);
     }
     // double -> double
     template <>
-    double convert(double input){
+    inline double convert(double input){
         return double(input);
     }
     // double -> int
     template <>
-    int convert(double input){
+    inline int convert(double input){
         return int(input);
     }
 
 
     // int -> string
     template <>
-    std::string convert(int input){
+    inline std::string convert(int input){
         return std::to_string(input);
     }
     // int -> float
     template <>
-    float convert(int input){
-        return int(input);
+    inline float convert(int input){
+        return float(input);
     }
     // int -> int
     template <>
-    double convert(int input){
+    inline double convert(int input){
         return double(input);
     }
     // int -> int
     template <>
-    int convert(int input){
+    inline int convert(int input){
         return int(input);
     }
 }

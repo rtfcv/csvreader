@@ -11,12 +11,12 @@
 
 
 
-template <typename __TYPE>
+template <typename CR_TYPE>
 class CsvReader{
 private:
-    std::vector<std::vector<__TYPE>> dataMatrix;
-    std::vector<std::string> __header;
-    std::vector<__TYPE> __index;
+    std::vector<std::vector<CR_TYPE>> dataMatrix;
+    std::vector<std::string> CR_header;
+    std::vector<CR_TYPE> CR_index;
     int num_colskip;
 
 
@@ -27,7 +27,7 @@ private:
      */
     void initialize(std::string fname, int skip_col, bool header){
         num_colskip=skip_col;
-        __header.clear();
+        CR_header.clear();
         dataMatrix.clear();
 
         std::fstream fin;
@@ -40,12 +40,12 @@ private:
         //string for a line, string for each element of csv
         std::string line, word;
         // will later use them in the inner loop
-        __TYPE element;
+        CR_TYPE element;
 
         // read header if told
         if(header){
             std::getline(fin, line);
-            std::vector<__TYPE> row;
+            std::vector<CR_TYPE> row;
 
             //create string stream for splitting the line
             std::stringstream rawline(line);
@@ -57,13 +57,13 @@ private:
             int oncol=1;
             while (std::getline(s, word, ',')) {
                 if(oncol <= num_colskip){oncol++;continue;}
-                __header.push_back(word);
+                CR_header.push_back(word);
             }
         }
 
         // read everything that is not a header
         while (std::getline(fin, line)) {
-            std::vector<__TYPE> row;
+            std::vector<CR_TYPE> row;
             std::stringstream s(line);
 
             // parse the row
@@ -71,7 +71,7 @@ private:
             while (std::getline(s, word, ',')) {
                 if(oncol <= num_colskip){oncol++;continue;}
                 // convert the string `word' into a stringstream
-                // to convert into the template `__TYPE' using operator >>
+                // to convert into the template `CR_TYPE' using operator >>
                 std::stringstream(word) >> element;
                 row.push_back(element);
             }
@@ -101,7 +101,7 @@ public:
     /**
      * returns the internal data matrix
      */
-    std::vector<std::vector<__TYPE>> get_data(){
+    std::vector<std::vector<CR_TYPE>> get_data(){
         return dataMatrix;
     }
 
@@ -110,7 +110,7 @@ public:
      * set which column is used as index
      */
     int set_index(std::string col_name){
-        __index = col(col_name);
+        CR_index = col(col_name);
         return 0;
     }
 
@@ -118,13 +118,13 @@ public:
     /**
      * returns an vector of columns
      */
-    std::vector<__TYPE> col(std::string key){
-        std::vector<__TYPE> slice = {};
-        int l=__header.size();
+    std::vector<CR_TYPE> col(std::string key){
+        std::vector<CR_TYPE> slice = {};
+        int l=CR_header.size();
         int the_index=-1;
 
         for(int i=0; i<l; i++){
-            if(__header[i]==key){
+            if(CR_header[i]==key){
                 the_index=i;
                 break;
             }
@@ -147,14 +147,14 @@ public:
     /**
      * returns an map of columns
      */
-    std::map<__TYPE,__TYPE> col_map(std::string key){
-        std::map<__TYPE,__TYPE> slice = {};
-        int l=__header.size();
+    std::map<CR_TYPE,CR_TYPE> col_map(std::string key){
+        std::map<CR_TYPE,CR_TYPE> slice = {};
+        int l=CR_header.size();
         int the_index=-1;
 
         //search which column the `key' specify
         for(int i=0; i<l; i++){
-            if(__header[i]==key){
+            if(CR_header[i]==key){
                 the_index=i;
                 break;
             }
@@ -167,7 +167,7 @@ public:
 
         l=dataMatrix.size();
         for(int i=0; i<l; i++){
-            slice[__index[i]] = dataMatrix[i][the_index];
+            slice[CR_index[i]] = dataMatrix[i][the_index];
         }
 
         return slice;
@@ -177,15 +177,15 @@ public:
     /**
      * returns an map of columns of a particular type
      */
-    template <typename __TYPE_col_output>
-    std::map<__TYPE,__TYPE_col_output> col_map(std::string key){
-        std::map<__TYPE,__TYPE_col_output> slice = {};
-        int l=__header.size();
+    template <typename CR_TYPE_col_output>
+    std::map<CR_TYPE,CR_TYPE_col_output> col_map(std::string key){
+        std::map<CR_TYPE,CR_TYPE_col_output> slice = {};
+        int l=CR_header.size();
         int the_index=-1;
 
         //search which column the `key' specify
         for(int i=0; i<l; i++){
-            if(__header[i]==key){
+            if(CR_header[i]==key){
                 the_index=i;
                 break;
             }
@@ -198,8 +198,8 @@ public:
 
         l=dataMatrix.size();
         for(int i=0; i<l; i++){
-            slice[__index[i]] = __CR::convert<__TYPE, __TYPE_col_output>(dataMatrix[i][the_index]);
-            //std::stringstream(std::to_string(dataMatrix[i][the_index])) >> slice[__index[i]];
+            slice[CR_index[i]] = CR::convert<CR_TYPE, CR_TYPE_col_output>(dataMatrix[i][the_index]);
+            //std::stringstream(std::to_string(dataMatrix[i][the_index])) >> slice[CR_index[i]];
         }
 
         return slice;
@@ -209,7 +209,7 @@ public:
     /**
      * returns an array of columns
      */
-    std::vector<__TYPE> row_by_index(int i){
+    std::vector<CR_TYPE> row_by_index(int i){
         return dataMatrix[i];
     }
 
@@ -217,16 +217,16 @@ public:
     /**
      * get a element by col name and index_string
      */
-    __TYPE loc(std::string col_name, __TYPE index){
+    CR_TYPE loc(std::string col_name, CR_TYPE index){
         //check if index is even set
 
         //then
-        int l=__index.size();
+        int l=CR_index.size();
         int the_index=-1;
 
         //look for the internal index of readable index
         for(int i=0; i<l; i++){
-            if(__index[i]==index){
+            if(CR_index[i]==index){
                 the_index=i;
                 break;
             }
@@ -245,28 +245,28 @@ public:
      * returns an array of headers
      */
     std::vector<std::string> header(){
-        return __header;
+        return CR_header;
     }
 
     /**
      * returns an vector of index column
      */
-    std::vector<__TYPE> index(){
-        return __index;
+    std::vector<CR_TYPE> index(){
+        return CR_index;
     }
 
     /**
      * returns an vector of index column
      */
-    std::vector<unsigned long> size(){
+    std::vector<size_t> size(){
         return {dataMatrix.size(), dataMatrix.begin()->size()};
     }
 
-    __TYPE operator () (std::string col, __TYPE index){
+    CR_TYPE operator () (std::string col, CR_TYPE index){
         return loc(col, index);
     }
 
-    std::vector<__TYPE> operator [](int i){
+    std::vector<CR_TYPE> operator [](int i){
         return dataMatrix[i];
     }
 };
@@ -276,14 +276,14 @@ public:
 /**
  * define operator << for use in outputstream
  */
-template <typename __TYPE>
-inline std::ostream& operator << (std::ostream& ostr,  CsvReader<__TYPE>& cr) {
-    auto __header = cr.header();
-    auto __index = cr.header();
+template <typename CR_TYPE>
+inline std::ostream& operator << (std::ostream& ostr,  CsvReader<CR_TYPE>& cr) {
+    auto CR_header = cr.header();
+    auto CR_index = cr.header();
 
-    if (! __header.empty()) {
-        ostr << __header.front();
-        for (auto itr = ++__header.begin(); itr !=__header.end(); itr++){
+    if (! CR_header.empty()) {
+        ostr << CR_header.front();
+        for (auto itr = ++CR_header.begin(); itr !=CR_header.end(); itr++){
             ostr << "\t" << *itr;
         }
         ostr << "\n";
@@ -291,8 +291,8 @@ inline std::ostream& operator << (std::ostream& ostr,  CsvReader<__TYPE>& cr) {
 
     // what if we do not have headers
     // this is not robust for now
-    int ncols = __header.size();
-    int nrows = cr.col(__header[0]).size();
+    int ncols = CR_header.size();
+    int nrows = cr.col(CR_header[0]).size();
 
     for (int i=0; i<nrows; i++){
         std::string delim = "";
