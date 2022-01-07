@@ -256,16 +256,36 @@ public:
     }
 
     /**
-     * returns an vector of index column
+     * returns an vector of size {rows, cols}
      */
     std::vector<size_t> size(){
         return {dataMatrix.size(), dataMatrix.begin()->size()};
     }
 
+    /**
+     * returns an Eigen Matrix of DataMatrix
+     */
+    template <typename matT>
+    matT dataAs(){
+        int rows = static_cast<int>(dataMatrix.size());
+        int cols = static_cast<int>(dataMatrix.begin()->size());
+
+        // Eigen::MatrixXd mat(rows, cols)
+        matT mat(rows, cols);
+
+        for(int i=0; i<rows; i++)
+          for(int j=0; j<cols; j++)
+              mat(i, j) = dataMatrix[i][j];
+        return mat;
+    }
+
+
+    // operator ()
     CR_TYPE operator () (std::string col, CR_TYPE index){
         return loc(col, index);
     }
 
+    // operator []
     std::vector<CR_TYPE> operator [](int i){
         return dataMatrix[i];
     }
